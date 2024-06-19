@@ -91,6 +91,9 @@ install : all predef
 	install adaexec.l $(MANDIR)/manl
 	install adalib.l  $(MANDIR)/manl
 
+check:
+	cd demos && $(MAKE) check
+
 # remove all targets
 MADE_HDRS =	vars.h gvars.h ivars.h hdr.h libhdr.h ghdr.h
 MADE_SRCS =	vars.c gvars.c ivars.c

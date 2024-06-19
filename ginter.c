@@ -121,6 +121,9 @@ void geninter(Tuple to_bind)									/*;geninter*/
 	argp[i++] = "-o";
 	argp[i++] = exec_name;
 
+    argp[i++] = "--std=c89";
+    argp[i++] = "-m32";
+
 	argp[i] = (char *) 0;
 
 	if (fork() == 0) {

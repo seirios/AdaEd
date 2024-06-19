@@ -1,6 +1,6 @@
-adacomp -nl mathlib math.adb
-adacomp -l  mathlib math.ads
-gcc -c math.c
+gcc --std=c89 -m32 -c math.c
+adacomp -nl mathlib math.ads
+adacomp -l mathlib math.adb
 adacomp -l mathlib roots.ada
 adabind -i math.o -l mathlib
 adaexec -l mathlib

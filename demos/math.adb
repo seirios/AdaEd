@@ -1,4 +1,4 @@
-PACKAGE BODY math IS
+PACKAGE BODY Math IS
 
   -- body of Math function package, which interfaces to the Ultrix
   -- math library. Normally we could interface our Ada math functions

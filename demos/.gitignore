@@ -1,0 +1,12 @@
+# demo libraries
+demolib/
+dining/
+mathlib/
+# symlink to install dir
+local
+# extracted files from diners2.ada
+roomwind.adb
+screen.adb
+screen.ads
+windows.adb
+windows.ads

@@ -1,8 +1,12 @@
 WITH Text_IO;
-WITH My_Int_IO;
-WITH My_Flt_IO;
 WITH Math;
 PROCEDURE SquareRoots IS
+
+  PACKAGE My_Int_IO IS
+     NEW Text_IO.Integer_IO (Num => Integer);
+
+  PACKAGE My_Flt_IO IS
+     NEW Text_IO.Float_IO   (Num => Float);
 
  -- Illustrates the square root function provided by Math
 
