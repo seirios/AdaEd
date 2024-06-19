@@ -2,8 +2,9 @@
 
 SHELL=/bin/sh
 
-CC= gcc
-CFLAGS=-O2
+CC= gcc --std=c89
+#CFLAGS=-O2
+CFLAGS=-m32 -DOP_SYS='"GNU/Linux"' -DSYSTEM_V -DWORDSIZE32 -DALIGN4# -Wall -g
 
 #CC= g++
 #CFLAGS=-g
@@ -11,14 +12,15 @@ CFLAGS=-O2
 #CC= CC
 #CFLAGS=-g -I/usr/lang/include/CC
 
-LINKER= $(CC)
-LFLAGS=-lg
+LINKER= $(CC) -m32
+#LFLAGS=-lg
 
 INSTALL = install
 
-BINDIR = /usr/local
-LIBDIR = /usr/local/lib
-MANDIR = /usr/local/man
+PREFIX := local
+BINDIR = $(PREFIX)/bin
+LIBDIR = $(PREFIX)/lib
+MANDIR = $(PREFIX)/share/man
 
 .SUFFIXES:
 .SUFFIXES: .o .c .h .ch .s .vbs
@@ -38,21 +40,21 @@ MANDIR = /usr/local/man
 	rm -f $*.h
 	echo >$*.h
 	chmod u+w $*.h
-	makech -h  < $< > $*.h
+	./makech -h  < $< > $*.h
 	chmod a-w $*.h
 
 .ch.c:
 	rm -f $*.c
 	echo >$*.c
 	chmod u+w $*.c
-	makech -c < $< > $*.c
+	./makech -c < $< > $*.c
 	chmod a-w $*.c
 
 .vbs.h:
 	rm -f $*.h
 	touch $*.h
 	chmod u+w $*.h
-	cdecom <$*.vbs | uniq >$*.h
+	./cdecom <$*.vbs | uniq >$*.h
 	chmod a-w $*.h
 
 # TARGET TO MAKE EVERYTHING
@@ -63,14 +65,14 @@ all: $(EXECS)
 
 predef: $(EXECS)
 	rm -rf predef predefdir
-	mkdir predefdir
+	mkdir -p predefdir
 	./adafront -s p -nl predefdir predef.ada
 	./adagen -g p -nl predefdir predef
 	touch predef
 
 install : all predef
-	-mkdir $(BINDIR)
-	-mkdir $(LIBDIR)
+	-mkdir -p $(BINDIR)
+	-mkdir -p $(LIBDIR)
 	install adacomp $(BINDIR)
 	install adabind $(BINDIR)
 	install adaexec $(BINDIR)
@@ -81,7 +83,8 @@ install : all predef
 	install predefdir/0.trc $(LIBDIR)/predef.trc
 	install predefdir/lib $(LIBDIR)/predef.lib
 	-rm $(LIBDIR)/adabind
-	ln -s $(BINDIR)/adabind $(LIBDIR)/adabind
+	ln -rs $(BINDIR)/adabind $(LIBDIR)/adabind
+	-mkdir -p $(MANDIR)
 	install adabind.l $(MANDIR)/manl
 	install adacomp.l $(MANDIR)/manl
 	install adaed.l   $(MANDIR)/manl
@@ -159,13 +162,13 @@ adabind: vars.c gvars.c hdr.h ghdr.h libhdr.h $(BND_OBJS)
 # Dependence on gmisc.o causes extra compile but gets dependencies right.
 bmisc.o: gmisc.o
 	cp gmisc.c bmisc.c
-	$(CC) -DBINDER -c bmisc.c
+	$(CC) $(CFLAGS) -DBINDER -c bmisc.c
 	rm -f bmisc.c
 
 # Look at last comment.
 bnodes.o: gnodes.o
 	cp gnodes.c bnodes.c
-	$(CC) -DBINDER -c bnodes.c
+	$(CC) $(CFLAGS) -DBINDER -c bnodes.c
 	rm -f bnodes.c
 
 #---------------------------#
@@ -179,9 +182,10 @@ INT_OBJS = 	axqr.o farith.o ilist.o imain.o imisc.o intb.o intc.o \
 
 XINT_OBJS =	inta.o load.o
 
+LDFLAGS := -m elf_i386
 adaexec: ivars.c inta_interface.o load_interface.o $(INT_OBJS)
 	$(LINKER) -o adaexec $(LFLAGS) $(INT_OBJS) $(XINT_OBJS) -lm >int.lm
-	ld -r -x load_interface.o $(INT_OBJS) inta_interface.o >adaint.lm
+	ld $(LDFLAGS) -r -x load_interface.o $(INT_OBJS) inta_interface.o >adaint.lm
 	mv a.out adaint
 
 #inta_interface.o: inta.o

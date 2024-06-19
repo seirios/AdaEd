@@ -1,0 +1,26 @@
+*~
+*.swp
+*.bak
+*.o
+*.lm
+vgcore*
+# auto-generated
+gvars.[ch]
+ivars.[ch]
+vars.[ch]
+ghdr.h
+hdr.h
+libhdr.h
+# directories
+local/
+predefdir/
+# build sentinel
+predef
+# executables
+adabind
+adacomp
+adaexec
+adafront
+adagen
+adaint
+adalib

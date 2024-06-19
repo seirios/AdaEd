@@ -205,7 +205,7 @@ X int errors INIT(FALSE); /* flag if errors are present*/
  */
 X int adaval_overflow; 
 X char *FILENAME;
-X FILE *MSGFILE INIT(stdout);
+X FILE *MSGFILE;
 /* added 24 sep 84*/
 /* init_nodes is tuple of nodes needed by save_tree (10) */
 X Tuple init_nodes;
